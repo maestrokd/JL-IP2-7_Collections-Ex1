@@ -137,7 +137,8 @@ public class Metro {
 
     // List of drivers' experience
     public void showListOfDriverExperience(Queue<Driver> driverQueue) {
-        System.out.println("-----------------------");
+        System.out.println("\n-----------------------");
+        System.out.println("List of Driver experience:");
         Queue<Driver> driverQueueTemp = new PriorityQueue<>(driverQueue);
 
         System.out.println("Driver Name | Experience");
@@ -145,6 +146,7 @@ public class Metro {
             Driver driverTemp = driverQueueTemp.remove();
             System.out.println(driverTemp.getName() + "|" + driverTemp.getExperience());
         }
+        System.out.println("-----------------------");
     }
 
 
@@ -162,6 +164,7 @@ public class Metro {
             for (Line line :lines) {
                 if (!trains.isEmpty()) {
                     line.trains.add(trains.pollFirst());
+                    line.trains.getLast().setLine(line);
                 }else {
                     break;
                 }
@@ -175,105 +178,15 @@ public class Metro {
     // Travel by stations
     // TODO Moving all passengers from the Train at the last station
     public void travelByStations(LinkedList<Line> lines, Queue<Driver> driverQueue) {
-        Random random = new Random();
-        int countPassenger;
-        int numberOfPassengersToOut;
 
         for (Line line : lines) {
             System.out.println();
             System.out.println("Line " + line.getName() + " Number of trains: " + line.trains.size());
 //            System.out.println(line.trains);
             for (Train train : line.trains) {
-
-                System.out.println();
-                System.out.println(train.getName() + " rode along the " + line.getName() + " Line");
-
-                // Moving the driver to the train
-                train.setDriver(driverQueue.poll());
-                System.out.println(train.getDriver().getName() + "|" + train.getDriver().getExperience());
-
-                for (Station station : line.stations) {
-
-                    // If station is last
-                    if (line.stations.getLast().equals(station)) {
-
-                        System.out.println();
-                        System.out.println(station.getInfo() + " | Last station!");
-
-                        for (Wagon wagon : train.wagons) {
-                            System.out.print(wagon.getName() + " | " + wagon.passengers.size() + " | ");
-
-                            if (wagon.passengers.size() != 0) {
-                                countPassenger = wagon.passengers.size();
-                                station.passengers.addAll(wagon.passengers);
-                                wagon.passengers.clear();
-                                System.out.print(countPassenger + " -->> out | ");
-                            } else {
-                                System.out.print("0 -->> out | ");
-                            }
-                            System.out.println(wagon.getName() + " | " + wagon.passengers.size());
-                        }
-                        System.out.println(station.getInfo() + " | " + station.passengers.size() + " passengers left at the station");
-                        break;
-                    }
-
-
-                    // If station not last
-                    for (int i = 0; i < (random.nextInt(400) + 800); i++) {
-                        station.passengers.add(new Passenger());
-                    }
-                    int numberOfPassengerInStation = station.passengers.size();
-                    System.out.println();
-                    System.out.println(station.getInfo() + " | " + station.passengers.size() + " passengers are ready to go");
-
-                    for (Wagon wagon : train.wagons) {
-                        System.out.print(wagon.getName() + " | " + wagon.passengers.size() + " | ");
-
-
-                        // TODO Passengers move out
-                        if (wagon.passengers.size() != 0) {
-
-                            // TODO Test
-//                                wagon.passengers.removeAll(wagon.passengers.subList(1, random.nextInt(wagon.passengers.size()));
-
-                            countPassenger = 0;
-
-                            // Old version
-//                            numberOfPassengersToOut = wagon.passengers.size()/2;
-
-                            numberOfPassengersToOut = random.nextInt(wagon.passengers.size());
-
-                            for (int i = 0; i < numberOfPassengersToOut; i++) {
-                                wagon.passengers.remove();
-                                countPassenger++;
-                            }
-                            System.out.print(countPassenger + " -->> out | ");
-                        } else {
-                            System.out.print("0 -->> out | ");
-                        }
-
-                        countPassenger = 0;
-                        while ((wagon.passengers.size() < Wagon.maxSize) && (!station.passengers.isEmpty())) {
-                            wagon.passengers.add(station.passengers.pollFirst());
-                            countPassenger++;
-                        }
-                        System.out.print("in <<-- " + countPassenger + " | ");
-                        System.out.println(wagon.getName() + " | " + wagon.passengers.size());
-                    }
-                    System.out.println(station.getInfo() + " | " + station.passengers.size() + " passengers left at the station");
-                }
-
-                // Get driving experience and Moving the driver from the Train
-                train.getDriver().addExperience();
-                System.out.println(train.getDriver().getName() + "|" + train.getDriver().getExperience());
-                driverQueue.add(train.getDriver());
-                train.setDriver(null);
-
+                new TrainRun(train, driverQueue);
             }
         }
     }
-
-
-
 
 }

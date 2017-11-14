@@ -8,10 +8,11 @@ public class Train {
     public static final int maxNumberOfSubwayCarsInTrain = 5;
     LinkedList<Wagon> wagons = new LinkedList<>();
 
+    private int train_id;
     private String name;
 
-    private int train_id;
-    private Train train;
+    private int line_id;
+    private Line line;
 
     private int driver_id;
     private Driver driver;
@@ -22,6 +23,14 @@ public class Train {
 
     public int getTrain_id() {
         return train_id;
+    }
+
+    public Line getLine() {
+        return line;
+    }
+
+    public void setLine(Line line) {
+        this.line = line;
     }
 
     public int getDriver_id() {

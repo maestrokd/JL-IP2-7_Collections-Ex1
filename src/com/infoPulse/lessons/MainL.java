@@ -16,6 +16,7 @@ public class MainL  {
         metro.setLines(metro.createAndFillLines(metro.getTrains(), namesOfLines.length, namesOfLines));
 
         metro.travelByStations(metro.getLines(), metro.getDriverQueue());
+
         metro.showListOfDriverExperience(metro.getDriverQueue());
 
     }
